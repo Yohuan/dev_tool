@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "simple-git": "^1.131.0"
+  }
+}
