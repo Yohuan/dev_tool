@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "chalk": "^3.0.0",
     "simple-git": "^1.131.0"
   }
 }
