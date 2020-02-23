@@ -1,4 +1,7 @@
+const fs = require('fs');
+
 const { ArgumentParser } = require('argparse');
+const simpleGit = require('simple-git/promise');
 
 const _createArgParser = () => {
   const parser = new ArgumentParser({
@@ -52,10 +55,23 @@ const _createArgParser = () => {
   return parser;
 };
 
-const main = () => {
+const _createGit = async (projectDir) => {
+  if (!fs.existsSync(projectDir) || !fs.statSync(projectDir).isDirectory()) {
+    throw new Error(`${projectDir} is not a valid directory.`);
+  }
+  const git = simpleGit(projectDir);
+  const isRepo = await git.checkIsRepo();
+  if (!isRepo) {
+    throw new Error(`${projectDir} is not under a git project.`);
+  }
+  return git;
+};
+
+const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
-  console.log(args);
+  const { projectDir } = args;
+  const git = await _createGit(projectDir);
 };
 
 main();
