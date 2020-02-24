@@ -8,10 +8,10 @@ const _createArgParser = () => {
     description: 'This is a monitor of branch difference',
   });
   parser.addArgument(
-    ['-d', '--git-project-dir'],
+    ['-d', '--git-working-dir'],
     {
       help: 'The directory of git project',
-      dest: 'projectDir',
+      dest: 'workingDir',
       type: 'string',
       required: true,
     },
@@ -50,9 +50,9 @@ const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
   const {
-    projectDir, targetBranch, numMaxFile, numMaxLine,
+    workingDir, targetBranch, numMaxFile, numMaxLine,
   } = args;
-  const gitMonitor = await createGitMonitor(projectDir);
+  const gitMonitor = await createGitMonitor(workingDir);
   const { numModifiedFile, numModifiedLine } = await gitMonitor.parseBranchDiff(targetBranch);
   displayDiffInfo(numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
 };
