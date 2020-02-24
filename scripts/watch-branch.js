@@ -1,7 +1,5 @@
 const { ArgumentParser } = require('argparse');
 
-const fs = require('fs');
-
 const { createGitMonitor } = require('../lib/git-monitor-factory');
 const { displayDiffInfo } = require('../lib/git-monitor');
 
