@@ -67,11 +67,17 @@ const _createGit = async (projectDir) => {
   return git;
 };
 
+const _parseBranchDiff = async (git, comparedBranch) => {
+  const data = await git.diffSummary([comparedBranch]);
+  console.log(data);
+};
+
 const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
-  const { projectDir } = args;
+  const { comparedBranch, projectDir } = args;
   const git = await _createGit(projectDir);
+  _parseBranchDiff(git, comparedBranch);
 };
 
 main();
