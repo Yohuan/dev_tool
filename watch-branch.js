@@ -1,4 +1,8 @@
+const fs = require('fs');
+
 const { ArgumentParser } = require('argparse');
+const simpleGit = require('simple-git/promise');
+const chalk = require('chalk');
 
 const _createArgParser = () => {
   const parser = new ArgumentParser({
@@ -16,17 +20,8 @@ const _createArgParser = () => {
   parser.addArgument(
     ['-tb', '--target-branch'],
     {
-      help: 'The target branch',
+      help: 'The target compared branch',
       dest: 'targetBranch',
-      type: 'string',
-      required: true,
-    },
-  );
-  parser.addArgument(
-    ['-cb', '--compared-branch'],
-    {
-      help: 'The compared branch',
-      dest: 'comparedBranch',
       type: 'string',
       defaultValue: 'master',
     },
@@ -52,10 +47,48 @@ const _createArgParser = () => {
   return parser;
 };
 
-const main = () => {
+const _createGit = async (projectDir) => {
+  if (!fs.existsSync(projectDir) || !fs.statSync(projectDir).isDirectory()) {
+    throw new Error(`${projectDir} is not a valid directory.`);
+  }
+  const git = simpleGit(projectDir);
+  const isRepo = await git.checkIsRepo();
+  if (!isRepo) {
+    throw new Error(`${projectDir} is not under a git project.`);
+  }
+  return git;
+};
+
+const _parseBranchDiff = async (git, targetBranch) => {
+  const data = await git.diffSummary([targetBranch]);
+  return {
+    numModifiedFile: data.changed,
+    numModifiedLine: data.insertions + data.deletions,
+  };
+};
+
+const _displayDiffInfo = (numModifiedFile, numModifiedLine, numMaxFile, numMaxLine) => {
+  if (numModifiedFile < numMaxFile) {
+    console.log(chalk.green(`${numModifiedFile} files are modified.`));
+  } else {
+    console.log(chalk.red(`${numModifiedFile} files are modified.`));
+  }
+  if (numModifiedLine < numMaxLine) {
+    console.log(chalk.green(`${numModifiedLine} lines are modified.`));
+  } else {
+    console.log(chalk.red(`${numModifiedLine} lines are modified.`));
+  }
+};
+
+const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
-  console.log(args);
+  const {
+    projectDir, targetBranch, numMaxFile, numMaxLine,
+  } = args;
+  const git = await _createGit(projectDir);
+  const { numModifiedFile, numModifiedLine } = await _parseBranchDiff(git, targetBranch);
+  _displayDiffInfo(numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
 };
 
 main();
