@@ -1,5 +1,7 @@
 const { ArgumentParser } = require('argparse');
 
+const fs = require('fs');
+
 const { createGitMonitor } = require('../lib/git-monitor-factory');
 const { displayDiffInfo } = require('../lib/git-monitor');
 
@@ -55,6 +57,7 @@ const main = async () => {
   const gitMonitor = await createGitMonitor(workingDir);
   const { numModifiedFile, numModifiedLine } = await gitMonitor.parseBranchDiff(targetBranch);
   displayDiffInfo(numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
+  gitMonitor.watchBranchDiff(targetBranch, numMaxFile, numMaxLine);
 };
 
 main();
