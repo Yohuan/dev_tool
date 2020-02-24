@@ -20,17 +20,8 @@ const _createArgParser = () => {
   parser.addArgument(
     ['-tb', '--target-branch'],
     {
-      help: 'The target branch',
+      help: 'The target compared branch',
       dest: 'targetBranch',
-      type: 'string',
-      required: true,
-    },
-  );
-  parser.addArgument(
-    ['-cb', '--compared-branch'],
-    {
-      help: 'The compared branch',
-      dest: 'comparedBranch',
       type: 'string',
       defaultValue: 'master',
     },
@@ -68,8 +59,8 @@ const _createGit = async (projectDir) => {
   return git;
 };
 
-const _parseBranchDiff = async (git, comparedBranch) => {
-  const data = await git.diffSummary([comparedBranch]);
+const _parseBranchDiff = async (git, targetBranch) => {
+  const data = await git.diffSummary([targetBranch]);
   return {
     numModifiedFile: data.changed,
     numModifiedLine: data.insertions + data.deletions,
@@ -93,10 +84,10 @@ const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
   const {
-    comparedBranch, projectDir, numMaxFile, numMaxLine,
+    projectDir, targetBranch, numMaxFile, numMaxLine,
   } = args;
   const git = await _createGit(projectDir);
-  const { numModifiedFile, numModifiedLine } = await _parseBranchDiff(git, comparedBranch);
+  const { numModifiedFile, numModifiedLine } = await _parseBranchDiff(git, targetBranch);
   _displayDiffInfo(numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
 };
 
