@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const { ArgumentParser } = require('argparse');
 const simpleGit = require('simple-git/promise');
+const chalk = require('chalk');
 
 const _createArgParser = () => {
   const parser = new ArgumentParser({
@@ -69,15 +70,34 @@ const _createGit = async (projectDir) => {
 
 const _parseBranchDiff = async (git, comparedBranch) => {
   const data = await git.diffSummary([comparedBranch]);
-  console.log(data);
+  return {
+    numModifiedFile: data.changed,
+    numModifiedLine: data.insertions + data.deletions,
+  };
+};
+
+const _displayDiffInfo = (numModifiedFile, numModifiedLine, numMaxFile, numMaxLine) => {
+  if (numModifiedFile < numMaxFile) {
+    console.log(chalk.green(`${numModifiedFile} files are modified.`));
+  } else {
+    console.log(chalk.red(`${numModifiedFile} files are modified.`));
+  }
+  if (numModifiedLine < numMaxLine) {
+    console.log(chalk.green(`${numModifiedLine} lines are modified.`));
+  } else {
+    console.log(chalk.red(`${numModifiedLine} lines are modified.`));
+  }
 };
 
 const main = async () => {
   const parser = _createArgParser();
   const args = parser.parseArgs();
-  const { comparedBranch, projectDir } = args;
+  const {
+    comparedBranch, projectDir, numMaxFile, numMaxLine,
+  } = args;
   const git = await _createGit(projectDir);
-  _parseBranchDiff(git, comparedBranch);
+  const { numModifiedFile, numModifiedLine } = await _parseBranchDiff(git, comparedBranch);
+  _displayDiffInfo(numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
 };
 
 main();
