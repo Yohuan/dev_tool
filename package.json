@@ -1,4 +1,23 @@
 {
+  "scripts": {
+    "test": "jest --color",
+    "test:watch": "jest --watch --color",
+    "test:coverage": "jest --coverage --color"
+  },
+  "jest": {
+    "testRegex": ".*(\\.)(test)\\.js$",
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ],
+    "collectCoverageFrom": [
+      "./lib/**/*.js"
+    ],
+    "coverageDirectory": "./jest/coverage",
+    "coverageReporters": [
+      "lcov",
+      "text"
+    ]
+  },
   "dependencies": {
     "argparse": "^1.0.10",
     "chalk": "^3.0.0",
