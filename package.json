@@ -2,6 +2,7 @@
   "dependencies": {
     "argparse": "^1.0.10",
     "chalk": "^3.0.0",
+    "chokidar": "^3.4.0",
     "simple-git": "^1.131.0"
   },
   "devDependencies": {
