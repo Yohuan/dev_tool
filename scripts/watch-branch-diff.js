@@ -53,7 +53,6 @@ const main = async () => {
   } = args;
   const gitMonitor = await GitMonitorFactory.createGitMonitor(workingDir);
   const currentBranch = await gitMonitor.getCurrentBranch();
-  console.clear();
   const { numModifiedFile, numModifiedLine } = await gitMonitor.parseBranchDiff(targetBranch);
   displayDiffInfo(currentBranch, targetBranch, numModifiedFile, numModifiedLine, numMaxFile, numMaxLine);
   gitMonitor.watchBranchDiff(targetBranch, numMaxFile, numMaxLine);
