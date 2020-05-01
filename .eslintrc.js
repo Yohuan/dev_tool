@@ -15,6 +15,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'max-len': ['warn', { 'code': 120 } ],
     'no-underscore-dangle': ["off"],
     'import/prefer-default-export': ["off"],
   },
