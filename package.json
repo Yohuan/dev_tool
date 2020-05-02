@@ -10,7 +10,8 @@
       "jest-extended"
     ],
     "collectCoverageFrom": [
-      "./lib/**/*.js"
+      "./lib/**/*.js",
+      "!./lib/**/index.js"
     ],
     "coverageDirectory": "./jest/coverage",
     "coverageReporters": [
