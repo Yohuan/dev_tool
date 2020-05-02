@@ -1,6 +1,6 @@
 const { ArgumentParser } = require('argparse');
 
-const { GitMonitorFactory, displayBranchInfo, displayDiffInfo } = require('../lib/git-monitor');
+const { GitMonitorFactory, displayBranchInfo, displayDiffInfo } = require('../src/git-monitor');
 
 const _createArgParser = () => {
   const parser = new ArgumentParser({
